@@ -20,7 +20,7 @@ x-keycloak-config: &keycloak-env
   KC_HTTPS_CERTIFICATE_KEY_FILE: ${KC_HTTPS_CERTIFICATE_KEY_FILE}
   KC_HOSTNAME_STRICT: ${KC_HOSTNAME_STRICT:-true}
   KC_PROXY_HEADER: ${KC_PROXY_HEADER:-xforwarded}
-
+  TZ: Asia/Jakarta
 volumes:
   kong_data: {}
   kong_prefix_vol:
@@ -33,6 +33,7 @@ volumes:
       device: tmpfs
   konga_data: {}
   keycloak-datastore: {}
+  redis-datastore: {}
 
 networks:
   kong-net:
@@ -134,3 +135,10 @@ services:
       - kong
     networks:
       - kong-net
+  kong-redis:
+    image: redis:alpine3.21
+    container_name: redis
+    networks:
+      - kong-net
+    volumes:
+      - redis-datastore:/data
